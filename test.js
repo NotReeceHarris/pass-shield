@@ -145,8 +145,6 @@ for (var i=1;i<=1000; i++) {
 /*  */
 
 console.log(`
-=====================================================
-
 /* INITIAL TEST */
 ┌───────────────────────────────────────────────┐
 │   Device lock : ${data.deviceLock ? 'yes' : 'no'}\t\t\t\t│
@@ -158,23 +156,23 @@ console.log(`
 │   Generating plate    : ${(end1 - start1).toFixed(10)} /ms\t│
 │   Validating plate    : ${(end2 - start2).toFixed(10)} /ms\t│
 │   Working             : ${validate ? 'yes' : 'no'}\t\t\t│
-│   
-│   plate  : ${(getStringSizeInMB(plate)).toFixed(10)} /mb\t│
-│   plates : ${(1 / getStringSizeInMB(plate)).toFixed(0)} /per mb\t│
+│                                               │
+│   plate  : ${(getStringSizeInMB(plate)).toFixed(10)} /mb\t\t\t│
+│   plates : ${(1 / getStringSizeInMB(plate)).toFixed(0)} /per mb\t\t\t\t│
+└───────────────────────────────────────────────┘
 
 /* ONE THOUSAND TESTS (run 1000 times) */
-
-data    : harden: false, obfuscate: false
-Time    : ${(thousandtime1).toFixed(10)} /ms
-Working : ${thousand1 ? 'yes' : 'no'} (Did every run work)
-
-data    : harden: false, obfuscate: true
-Time    : ${(thousandtime2).toFixed(10)} /ms
-Working : ${thousand2 ? 'yes' : 'no'} (Did every run work)
-
-data    : harden: true, obfuscate: false
-Time    : ${(thousandtime3).toFixed(10)} /ms
-Working : ${thousand3 ? 'yes' : 'no'} (Did every run work)
-
-=====================================================
+┌───────────────────────────────────────────────┐
+│   data    : harden: false, obfuscate: false\t│
+│   Time    : ${(thousandtime1).toFixed(10)} /ms\t\t\t│
+│   Working : ${thousand1 ? 'yes' : 'no'} (Did every run work)\t\t│
+│                                               │
+│   data    : harden: false, obfuscate: true\t│
+│   Time    : ${(thousandtime2).toFixed(10)} /ms\t\t\t│
+│   Working : ${thousand2 ? 'yes' : 'no'} (Did every run work)\t\t│
+│                                               │
+│   data    : harden: true, obfuscate: false\t│
+│   Time    : ${(thousandtime3).toFixed(10)} /ms\t\t│
+│   Working : ${thousand3 ? 'yes' : 'no'} (Did every run work)\t\t│
+└───────────────────────────────────────────────┘
 `)
