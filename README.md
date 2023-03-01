@@ -2,31 +2,28 @@
 
 ## Usage
 ```js
-const ps = require('passshield')
-const shield = new ps({
+const PassShield = require('passshield')
+const shield = new PassShield({
     key: 'D7tqpdA%NdUN%02f5I#cLOO4a#93cU3U',
     iv: 'Yx1j5Iy9$z0e#G2Q',
     salt: 'xpUSCX9BJ0#pn4%Pj$8u05dMa^lf',
-
-    deviceLock: true, // Add a device's fingerprint as a secondary salt
-    harden: true, // Increase security level (resulting in longer output and time)
-    obfuscate: true // Add random data as obfuscation
 })
 
-/* This will generate a unique value based of your params and password */
+/* This will generate a unique and irraversable value  */
 const plate = shield.protect('correctHorseBatteryStaple')
 
-/* Validate the password  */
 shield.validate(plate, 'correctHorseBatteryStaple') 
 // True
-shield.validate(plate, 'password1')
-// False
 ```
 
 ## Introduction
-PassShield is a password validation technique that involves generating a unique and random value called a "plate". This plate is used to encode the password in such a way that it takes a longer time to decode than to encode. This increases the security of the password as it becomes much harder for attackers to decode the password.
+PassShield is a robust password securing and validation algorithm designed to prevent brute-force and reverse lookup attacks. The algorithm works by first generating a salt and a random number between x and y, and then using them to hash the password. The resulting hash is then split into two halves, each of which is hashed again. The resulting hashes are then obfuscated with filler data and encrypted using a key and iv, creating a "plate."
 
-By using PassShield, passwords can be made more secure and less vulnerable to attacks such as dictionary attacks and brute force attacks. Additionally, the use of a plate value ensures that even if an attacker gains access to the encrypted obfuscatedObject, they cannot decode the password without the corresponding plate value.
+To validate a password, the "plate" is decrypted and unobfuscated to obtain the two half hashes. An iterable loop from x to y is initiated, and each iteration the input password is hashed with the salt and the iterated value. The resulting hash is then split into two halves, each of which is hashed and compared with the hashes obtained from the "plate." If they match, the password is considered valid.
+
+In summary, PassShield uses a multi-step process to securely hash and validate passwords, making it resistant to common password cracking techniques such as brute-force and reverse lookup attacks.
+
+However, it's worth noting that PassShield's encryption process results in an extended decoding time, with an average of 4.08 ms. While this can lead to more lookups, it also means that brute-force attacks will take longer to crack passwords, making PassShield an effective defense against such attacks. Despite the longer decoding time, legitimate decoding is still fast and efficient.
 
 ## How it works
 
@@ -34,26 +31,26 @@ By using PassShield, passwords can be made more secure and less vulnerable to at
 ```
 HashedPassword = hash(salt + password + randomNumber(x, y))
 
-obfuscatedObject = {
-    Obfuscation 1: hash(randomNumber(x, y))
-    Hash 1: hash(halfString(HashedPassword)[0])
-    Obfuscation 2: hash(randomNumber(x, y))
-    Hash 3: hash(halfString(HashedPassword)[1])
-    Obfuscation 3: hash(randomNumber(x, y))
-}
+obfuscatedArray = [
+    hash(randomString())
+    hash(halfString(HashedPassword)[0])
+    hash(randomString())
+    hash(halfString(HashedPassword)[1])
+    hash(randomString())
+]
 
-return encrypt(obfuscatedObject)
+return encrypt(obfuscatedArray.join(','))
 ```
 
 - Calculate the HashedPassword by hashing the salt, password, and a random number within the range x to y.
-- Create an obfuscatedObject with the following properties:
+- Create an obfuscatedArray with the following properties:
     - a. Obfuscation 1: hash of a random number within the range x to y
     - b. Hash 1: hash of the first half of the HashedPassword
     - c. Obfuscation 2: hash of a random number within the range x to y
     - d. Hash 3: hash of the second half of the HashedPassword
     - e. Obfuscation 3: hash of a random number within the range x to y
-- Encrypt the obfuscatedObject.
-- Return the encrypted obfuscatedObject.
+- Encrypt the obfuscatedArray.
+- Return the plate.
 
 ### Validation
 ```
@@ -62,62 +59,26 @@ decryptedPlate = decrypt(plate)
 for i in range(x,y) {
     HashedPassword = hash(salt + password + i)
 
-    if hash(half(HashedPassword)[0]) + hash(half(HashedPassword)[1]) = decryptedPlate.hash1 + decryptedPlate.hash2 {
+    if hash(half(HashedPassword)[0]) + hash(half(HashedPassword)[1]) === (decryptedPlate.split(',')[1] + decryptedPlate.split(',')[3]) {
         return true
     }
 }
 
 return false
 ```
-- Decrypt the plate to get the decryptedPlate object.
+- Decrypt the plate to get the decryptedPlate array.
 - For each value of i in the range from x to y, do the following:
     - a. Calculate the HashedPassword by hashing the salt, password, and i.
-    - b. Check if the concatenation of the hash of the first half of HashedPassword and the hash of the second half of HashedPassword is equal to the concatenation of the hash1 and hash2 properties of the decryptedPlate object.
+    - b. Check if the concatenation of the hash of the first half of HashedPassword and the hash of the second half of HashedPassword is equal to the concatenation of the hash1 and hash2 properties of the decryptedPlate array.
     - c. If the two concatenations are equal, return true.
 - If no matching concatenation is found, return false.
 
 ## Tests
 
 ```
-┌───────────────────────────────────────────────┐
-│ INITIAL TEST                                  │
-├───────────────────────────────────────────────┤
-│   Device lock : yes                           │
-│   Harden mode : yes                           │
-│   Obfuscation : yes                           │
-│   Loop        : no                            │
-├───────────────────────────────────────────────┤
-│   Require dependency  : 4.1742000580 /ms      │
-│   Initialize class    : 0.4844999313 /ms      │
-│   Generating plate    : 0.6945998669 /ms      │
-│   Validating plate    : 61.2734999657 /ms     │
-│   Working             : yes                   │
-├───────────────────────────────────────────────┤
-│   plate  : 0.0446472168 /mb                   │
-│   plates : 22 /per mb                         │
-└───────────────────────────────────────────────┘
+Each was run 10 thousand times
 
-┌───────────────────────────────────────────────┐
-│ TEN THOUSAND TESTS (run 10000 times)          │
-├───────────────────────────────────────────────┤
-│   data    : harden: false, obfuscate: false   │
-│   Avg gen : 0.0214394713 /ms                  │
-│   Avg val : 1.9706938301 /ms                  │
-│   Working : yes (Did every run work)          │
-├───────────────────────────────────────────────┤
-│   data    : harden: false, obfuscate: true    │
-│   Avg gen : 0.0379001297 /ms                  │
-│   Avg val : 1.8588992688 /ms                  │
-│   Working : yes (Did every run work)          │
-├───────────────────────────────────────────────┤
-│   data    : harden: true, obfuscate: false    │
-│   Avg gen : 0.4618791692 /ms                  │
-│   Avg val : 26.0069992397 /ms                 │
-│   Working : yes (Did every run work)          │
-├───────────────────────────────────────────────┤
-│   Obfuscation Generation : +0.0164606584 /ms  │
-│   Obfuscation Validation : -0.1117945613 /ms  │
-│   Harden Generate : +0.4404396979 /ms         │
-│   Harden Validate : +24.0363054096 /ms        │
-└───────────────────────────────────────────────┘
+SHA256                : 0.03 seconds, on average 1 hash took 0.0025 ms
+PassShield Generation : 0.27 seconds, on average 1 generation took 0.0270 ms
+PassSHield Validation : 40.85 seconds, on average 1 validation took 4.0855 ms
 ```
