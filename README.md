@@ -1,4 +1,4 @@
-# ![PassShield](https://raw.githubusercontent.com/NotReeceHarris/NotReeceHarris/7276afd7e995f502acbe1c351bfb31ca709c7df3/cdn/passshield-white.svg)
+![PassShield](https://raw.githubusercontent.com/NotReeceHarris/NotReeceHarris/7276afd7e995f502acbe1c351bfb31ca709c7df3/cdn/passshield-white.svg)
 
 ## Usage
 ```js
@@ -8,7 +8,7 @@ const shield = new ps({
     iv: 'Yx1j5Iy9$z0e#G2Q',
     salt: 'xpUSCX9BJ0#pn4%Pj$8u05dMa^lf',
 
-    deviceLock: true, // Ad a device fingerprint as a secondary salt
+    deviceLock: true, // Add a device's fingerprint as a secondary salt
     harden: true, // Increase security level (resulting in longer output and time)
     obfuscate: true // Add random data as obfuscation
 })
@@ -27,8 +27,6 @@ shield.validate(plate, 'password1')
 PassShield is a password validation technique that involves generating a unique and random value called a "plate". This plate is used to encode the password in such a way that it takes a longer time to decode than to encode. This increases the security of the password as it becomes much harder for attackers to decode the password.
 
 By using PassShield, passwords can be made more secure and less vulnerable to attacks such as dictionary attacks and brute force attacks. Additionally, the use of a plate value ensures that even if an attacker gains access to the encrypted obfuscatedObject, they cannot decode the password without the corresponding plate value.
-
----
 
 ## How it works
 
@@ -89,13 +87,13 @@ return false
 │   Obfuscation : yes                           │
 │   Loop        : no                            │
 ├───────────────────────────────────────────────┤
-│   Require dependency  : 4.2061002254 /ms      │
-│   Initialize class    : 0.7736999989 /ms      │
-│   Generating plate    : 1.3889000416 /ms      │
-│   Validating plate    : 2.0262000561 /ms      │
+│   Require dependency  : 4.1742000580 /ms      │
+│   Initialize class    : 0.4844999313 /ms      │
+│   Generating plate    : 0.6945998669 /ms      │
+│   Validating plate    : 61.2734999657 /ms     │
 │   Working             : yes                   │
 ├───────────────────────────────────────────────┤
-│   plate  : 0.0460510254 /mb                   │
+│   plate  : 0.0446472168 /mb                   │
 │   plates : 22 /per mb                         │
 └───────────────────────────────────────────────┘
 
@@ -103,23 +101,23 @@ return false
 │ TEN THOUSAND TESTS (run 10000 times)          │
 ├───────────────────────────────────────────────┤
 │   data    : harden: false, obfuscate: false   │
-│   Avg gen : 0.0149940291 /ms                  │
-│   Avg val : 0.2079026003 /ms                  │
+│   Avg gen : 0.0214394713 /ms                  │
+│   Avg val : 1.9706938301 /ms                  │
 │   Working : yes (Did every run work)          │
 ├───────────────────────────────────────────────┤
 │   data    : harden: false, obfuscate: true    │
-│   Avg gen : 0.0383048700 /ms                  │
-│   Avg val : 0.2027344590 /ms                  │
+│   Avg gen : 0.0379001297 /ms                  │
+│   Avg val : 1.8588992688 /ms                  │
 │   Working : yes (Did every run work)          │
 ├───────────────────────────────────────────────┤
 │   data    : harden: true, obfuscate: false    │
-│   Avg gen : 0.3375881917 /ms                  │
-│   Avg val : 1.8532644902 /ms                  │
+│   Avg gen : 0.4618791692 /ms                  │
+│   Avg val : 26.0069992397 /ms                 │
 │   Working : yes (Did every run work)          │
 ├───────────────────────────────────────────────┤
-│   Obfuscation Generation : +0.0233108409 /ms  │
-│   Obfuscation Validation : -0.0051681413 /ms  │
-│   Harden Generate : +0.3225941626 /ms         │
-│   Harden Validate : +1.6453618899 /ms         │
+│   Obfuscation Generation : +0.0164606584 /ms  │
+│   Obfuscation Validation : -0.1117945613 /ms  │
+│   Harden Generate : +0.4404396979 /ms         │
+│   Harden Validate : +24.0363054096 /ms        │
 └───────────────────────────────────────────────┘
 ```
