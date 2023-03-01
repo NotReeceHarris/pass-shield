@@ -1,4 +1,4 @@
-# PassShield : version-1
+# ![PassShield](https://raw.githubusercontent.com/NotReeceHarris/NotReeceHarris/7276afd7e995f502acbe1c351bfb31ca709c7df3/cdn/passshield-white.svg)
 
 ## Usage
 ```js
