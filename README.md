@@ -1,4 +1,4 @@
-![PassShield](https://raw.githubusercontent.com/NotReeceHarris/NotReeceHarris/7276afd7e995f502acbe1c351bfb31ca709c7df3/cdn/passshield-white.svg)
+![PassShield](https://github.com/NotReeceHarris/NotReeceHarris/blob/main/cdn/passshield-trans-.purple.png?raw=true)
 
 ## Usage
 ```js
