@@ -157,7 +157,7 @@ module.exports = class {
   protect(pass) {
     // Create a hash of the password and fingerprint (if device lock is enabled).
     const hash = crypto.createHash(this.hash)
-        .update(this.salt + pass + (this.fingerprint) + (this.loop || this.harden ? rn(1, (this.harden ? 1000 : 100)) : ''))
+        .update(this.salt + pass + (this.fingerprint) + (this.loop || this.harden ? rn(1, (this.harden ? 10000 : 1000)) : ''))
         .digest('hex');
 
     // Divide the hash into two halves.
@@ -180,9 +180,9 @@ module.exports = class {
     }
     // Obfuscate the data using current time if the obfuscate option is enabled.
     else if (this.obfuscate) {
-      data.obf1 = crypto.createHash(this.hash).update(rs(100) + (new Date())).digest('hex');
-      data.obf2 = crypto.createHash(this.hash).update(rs(100) + (new Date())).digest('hex');
-      data.obf3 = crypto.createHash(this.hash).update(rs(100) + (new Date())).digest('hex');
+      data.obf1 = crypto.createHash(this.hash).update(rs(15) + (new Date())).digest('hex');
+      data.obf2 = crypto.createHash(this.hash).update(rs(15) + (new Date())).digest('hex');
+      data.obf3 = crypto.createHash(this.hash).update(rs(15) + (new Date())).digest('hex');
     } else {
       // If neither harden nor obfuscate options are enabled, remove the obfuscation data from the object.
       delete data.obf1, delete data.obf2, delete data.obf3;
@@ -204,7 +204,7 @@ module.exports = class {
       const decryptPlate = JSON.parse(de(plate, this.key, this.iv, this.algo));
       // Check if the loop or harden flag is set
       if (this.loop || this.harden) {
-        for (let i=1; i<=(this.harden ? 1000 : 100); i++) {
+        for (let i=1; i<=(this.harden ? 10000 : 1000); i++) {
           // Generate a hash based on the password, salt, fingerprint, and index i
           const hash = crypto.createHash(this.hash).update(this.salt + pass + (this.fingerprint) + (i)).digest('hex');
           const halfLength = Math.floor(hash.length / 2);

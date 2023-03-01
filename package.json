@@ -2,7 +2,7 @@
   "name": "passshield",
   "version": "1.0.0",
   "description": "Advanced password security",
-  "main": "index.js",
+  "main": "dist/securepass.js",
   "scripts": {
     "test": "node test.js"
   },

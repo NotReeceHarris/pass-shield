@@ -50,7 +50,7 @@ console.log('Running test');
 /* TEST SPEED OF RUN */
 
 const start = performance.now();
-const PassShield = require('./index');
+const PassShield = require('./dist/securepass.js');
 const end = performance.now();
 
 const start0 = performance.now();
