@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
-const crypto = require('crypto');
+/* const crypto = require('crypto');
 
 function generateRandomString(length) {
   const buffer = crypto.randomBytes(length);
@@ -28,28 +28,39 @@ function calculateAverage(array) {
   });
 
   return total / count;
-}
+} */
 
-const key = generateRandomString(24);
-const salt = generateRandomString(16);
-const iv = generateRandomString(12);
-const password = generateRandomString(23);
+const crypto = require('crypto');
+const PassShield = require('./src/v2.js');
 
-const data = {
-  key: key,
-  salt: salt,
-  iv: iv,
+const shield = new PassShield({
+  key: 'PouASVr11UANWIDY41ZT5F8uHiNOzWZt',
+  salt: 'tucvhzSf2IDg_5AOWAELeA',
+  iv: 'bJGe0r8_XnWBqA5c',
+  loop: 100000,
+});
 
-  deviceLock: true,
-  harden: true,
-  obfuscate: true,
-};
+const times = {gen: {start: 0, end: 0}, val: {start: 0, end: 0}}
 
-console.log('Running test');
+times.gen.start = performance.now();
+const plate = shield.protect('SecurePassword123');
+times.gen.end = performance.now();
+
+times.val.start = performance.now();
+const valid = shield.validate(plate, 'SecurePassword123');
+times.val.end = performance.now();
+
+console.log(`    Generation  : ${times.gen.end - times.gen.start}
+    Validation  : ${times.val.end - times.val.start}
+
+    Working     : ${valid ? 'yes' : 'no'}
+    Plate hash  : ${crypto.createHash('sha256').update(plate).digest('hex')}
+    Plate len   : ${plate.length}
+`);
 
 /* TEST SPEED OF RUN */
 
-const start = performance.now();
+/* const start = performance.now();
 const PassShield = require('./dist/securepass.js');
 const end = performance.now();
 
@@ -64,8 +75,6 @@ const end1 = performance.now();
 const start2 = performance.now();
 const validate = shield.validate(plate, password);
 const end2 = performance.now();
-
-/*  */
 
 const thousandtime1 = {gen: [], val: []};
 let thousand1 = true;
@@ -98,7 +107,6 @@ for (let i=1; i<=10000; i++) {
   thousandtime1.val.push(end4 - start4);
 }
 
-/*  */
 
 const thousandtime2 = {gen: [], val: []};
 let thousand2 = true;
@@ -131,7 +139,6 @@ for (let i=1; i<=10000; i++) {
   thousandtime2.val.push(end4 - start4);
 }
 
-/*  */
 
 const thousandtime3 = {gen: [], val: []};
 let thousand3 = true;
@@ -165,18 +172,16 @@ for (let i=1; i<=10000; i++) {
 }
 
 
-/*  */
-
 console.log(`
 ┌───────────────────────────────────────────────┐
-│ INITIAL TEST                                  │   Device lock: This fingerprints the hardware of the system 
+│ INITIAL TEST                                  │   Device lock: This fingerprints the hardware of the system
 ├───────────────────────────────────────────────┤                running PassShield and adds it as a salt to
 │   Device lock : ${data.deviceLock ? 'yes' : 'no'}\t\t\t\t│                the hash in addition to the specified salt.
 │   Harden mode : ${data.harden ? 'yes' : 'no'}\t\t\t\t│                (Default: Disabled)
 │   Obfuscation : ${data.obfuscate ? 'yes' : 'no'}\t\t\t\t│
 │   Loop        : ${data.Loop ? 'yes' : 'no'}\t\t\t\t│
 ├───────────────────────────────────────────────┤   Obfuscation: This adds random data to the encrypted
-│   Require dependency  : ${(end - start).toFixed(10)} /ms\t│                container making it a random value each generation,  
+│   Require dependency  : ${(end - start).toFixed(10)} /ms\t│                container making it a random value each generation,
 │   Initialize class    : ${(end0 - start0).toFixed(10)} /ms\t│                making it impossible for a reverse lookup
 │   Generating plate    : ${(end1 - start1).toFixed(10)} /ms\t│                (Default: Enabled)
 │   Validating plate    : ${(end2 - start2).toFixed(10)} /ms\t│
@@ -193,20 +198,21 @@ console.log(`
 │   Avg gen : ${calculateAverage(thousandtime1.gen).toFixed(10)} /ms\t\t\t│   Hash: This is the hashing algorithm used
 │   Avg val : ${calculateAverage(thousandtime1.val).toFixed(10)} /ms\t\t\t│         to hash your passwords.
 │   Working : ${thousand1 ? 'yes' : 'no'} (Did every run work)\t\t│         (Default: 'sha256')
-├───────────────────────────────────────────────┤  
+├───────────────────────────────────────────────┤
 │   data    : harden: false, obfuscate: true\t│
 │   Avg gen : ${calculateAverage(thousandtime2.gen).toFixed(10)} /ms\t\t\t│
 │   Avg val : ${calculateAverage(thousandtime2.val).toFixed(10)} /ms\t\t\t│
 │   Working : ${thousand2 ? 'yes' : 'no'} (Did every run work)\t\t│
-├───────────────────────────────────────────────┤  
+├───────────────────────────────────────────────┤
 │   data    : harden: true, obfuscate: false\t│
 │   Avg gen : ${calculateAverage(thousandtime3.gen).toFixed(10)} /ms\t\t\t│
 │   Avg val : ${calculateAverage(thousandtime3.val).toFixed(10)} /ms\t\t\t│
 │   Working : ${thousand3 ? 'yes' : 'no'} (Did every run work)\t\t│
-├───────────────────────────────────────────────┤  
+├───────────────────────────────────────────────┤
 │   Obfuscation Generation : ${(calculateAverage(thousandtime2.gen) - calculateAverage(thousandtime1.gen)) >= 0 ? '+' : ''}${(calculateAverage(thousandtime2.gen) - calculateAverage(thousandtime1.gen)).toFixed(10)} /ms\t│
 │   Obfuscation Validation : ${(calculateAverage(thousandtime2.val) - calculateAverage(thousandtime1.val)) >= 0 ? '+' : ''}${(calculateAverage(thousandtime2.val) - calculateAverage(thousandtime1.val)).toFixed(10)} /ms\t│
 │   Harden Generate : ${(calculateAverage(thousandtime3.gen) - calculateAverage(thousandtime1.gen)) >= 0 ? '+' : ''}${(calculateAverage(thousandtime3.gen) - calculateAverage(thousandtime1.gen)).toFixed(10)} /ms\t\t│
 │   Harden Validate : ${(calculateAverage(thousandtime3.val) - calculateAverage(thousandtime1.val)) >= 0 ? '+' : ''}${(calculateAverage(thousandtime3.val) - calculateAverage(thousandtime1.val)).toFixed(10)} /ms\t\t│
 └───────────────────────────────────────────────┘
 `);
+ */

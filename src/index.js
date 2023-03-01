@@ -147,6 +147,7 @@ module.exports = class {
     this.harden = data.harden != undefined ? data.harden : false;
     this.obfuscate = data.obfuscate != undefined ? data.obfuscate : true;
     this.loop = data.loop != undefined ? data.loop : true;
+    this.loopSize = data.loopSize != undefined ? data.loopSize : 100;
   }
 
   /**
@@ -157,7 +158,7 @@ module.exports = class {
   protect(pass) {
     // Create a hash of the password and fingerprint (if device lock is enabled).
     const hash = crypto.createHash(this.hash)
-        .update(this.salt + pass + (this.fingerprint) + (this.loop || this.harden ? rn(1, (this.harden ? 10000 : 1000)) : ''))
+        .update(this.salt + pass + (this.fingerprint) + (this.loop || this.harden ? rn(1, (this.harden ? this.loopSize != 100 ? this.loopSize : 10000 : this.loopSize != 100 ? this.loopSize : 1000)) : ''))
         .digest('hex');
 
     // Divide the hash into two halves.
@@ -204,7 +205,7 @@ module.exports = class {
       const decryptPlate = JSON.parse(de(plate, this.key, this.iv, this.algo));
       // Check if the loop or harden flag is set
       if (this.loop || this.harden) {
-        for (let i=1; i<=(this.harden ? 10000 : 1000); i++) {
+        for (let i=1; i<=(this.harden ? this.loopSize != 100 ? this.loopSize : 10000 : this.loopSize != 100 ? this.loopSize : 1000); i++) {
           // Generate a hash based on the password, salt, fingerprint, and index i
           const hash = crypto.createHash(this.hash).update(this.salt + pass + (this.fingerprint) + (i)).digest('hex');
           const halfLength = Math.floor(hash.length / 2);
