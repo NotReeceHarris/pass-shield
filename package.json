@@ -1,0 +1,29 @@
+{
+  "name": "passshield",
+  "version": "1.0.0",
+  "description": "Advanced password security",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotReeceHarris/PassShield.git"
+  },
+  "keywords": [
+    "hash",
+    "encryption",
+    "security",
+    "password"
+  ],
+  "author": "Reece Harris <reeceharris@email.com>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/NotReeceHarris/PassShield/issues"
+  },
+  "homepage": "https://github.com/NotReeceHarris/PassShield#readme",
+  "devDependencies": {
+    "eslint": "^8.35.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
