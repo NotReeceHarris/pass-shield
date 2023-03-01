@@ -30,7 +30,9 @@ By using PassShield, passwords can be made more secure and less vulnerable to at
 
 ---
 
-## Generation
+## How it works
+
+### Generation
 ```
 HashedPassword = hash(salt + password + randomNumber(x, y))
 
@@ -55,7 +57,7 @@ return encrypt(obfuscatedObject)
 - Encrypt the obfuscatedObject.
 - Return the encrypted obfuscatedObject.
 
-## Validation
+### Validation
 ```
 decryptedPlate = decrypt(plate)
 
