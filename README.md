@@ -26,23 +26,6 @@ shield.validate(plate, 'password1')
 ## Introduction
 PassShield is a password validation technique that involves generating a unique and random value called a "plate". This plate is used to encode the password in such a way that it takes a longer time to decode than to encode. This increases the security of the password as it becomes much harder for attackers to decode the password.
 
-The PassShield algorithm works as follows:
-
-- Generate a random plate value that will be used to encode the password.
-- Hash the salt, password, and plate value using a secure hash function to generate a HashedPassword.
-- Obfuscate the HashedPassword by dividing it into two halves and hashing each half with a different random number. This creates an obfuscatedObject that is unique to the password and the plate.
-- Encrypt the obfuscatedObject to ensure that it can only be decoded by authorized parties.
-- Store the encrypted obfuscatedObject and the plate value in a secure location.
-
-When a user attempts to log in with a password, the PassShield algorithm is used to validate the password as follows:
-
-- Retrieve the encrypted obfuscatedObject and plate value from the secure location.
-- Decrypt the obfuscatedObject to get the decryptedPlate object.
-- For each value of i in a range of random numbers, hash the salt, password, and i to generate a HashedPassword.
-- Obfuscate the HashedPassword by dividing it into two halves and hashing each half with the same random numbers used to obfuscate the original password.
-- Check if the concatenated hash values of the two obfuscated halves match the concatenated hash values of the two halves in the decryptedPlate object.
-- If a match is found, the password is considered valid and the user is granted access. If no match is found, the user is denied access.
-
 By using PassShield, passwords can be made more secure and less vulnerable to attacks such as dictionary attacks and brute force attacks. Additionally, the use of a plate value ensures that even if an attacker gains access to the encrypted obfuscatedObject, they cannot decode the password without the corresponding plate value.
 
 ---
