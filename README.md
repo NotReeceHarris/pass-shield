@@ -1,6 +1,5 @@
 ![PassShield](https://github.com/NotReeceHarris/NotReeceHarris/blob/main/cdn/passshield-trans-.purple.png?raw=true)
 
-## Usage
 ```js
 const PassShield = require('passshield')
 const shield = new PassShield({
@@ -78,7 +77,9 @@ return false
 ```
 Each was run 10 thousand times
 
-SHA256                : 0.03 seconds, on average 1 hash took 0.0025 ms
+SHA256 Generation     : 0.03 seconds, on average 1 hash took 0.0025 ms
+SHA256 Validation     : 0.03 seconds, on average 1 hash took 0.0034 ms // Checking if stored hash equals input that has been hashed
+
 PassShield Generation : 0.27 seconds, on average 1 generation took 0.0270 ms
-PassSHield Validation : 40.85 seconds, on average 1 validation took 4.0855 ms
+PassShield Validation : 40.85 seconds, on average 1 validation took 4.0855 ms
 ```
